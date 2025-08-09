@@ -46,7 +46,6 @@ class UserAuthController {
             }
 
             // Check for duplicate email
-            // const isExistingUser = await UserModel.findOne({ email });
             const userWithEmail = await UserModel.aggregate([
                 {
                     $match: {

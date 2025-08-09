@@ -37,10 +37,9 @@ app.set("views", "views")
 app.use(express.static(__dirname + '/public'));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 
-//routes front end 
-// //quiz routes
-// const quiz=require('./app/routes/userAnsRoutes')
-// app.use('/api',quiz)
+//routes catgeory
+const categoryRoutes =require('./app/routes/categoryRoutes')
+app.use('/api',categoryRoutes )
 // //auth route
 const userAuthRoues=require('./app/routes/userAuthRoutes')
 app.use ('/api/auth',userAuthRoues)
