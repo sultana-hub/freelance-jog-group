@@ -19,6 +19,16 @@ const loginValidation = Joi.object({
     password: Joi.string().required().min(4).trim(),
 })
 
+const profileUpdateValidation=Joi.object({
+    name: Joi.string().required().min(3).trim(),
+    email: Joi.string().email().optional().trim(),
+    password: Joi.string().optional().trim(),
+    profilePic: Joi.string().required().trim(),
+    role: Joi.string().valid('freelancer', 'client').required().trim(),
+    skills: Joi.array().items(Joi.string().trim()).optional(),
+    bio: Joi.string().optional().min(3).trim(),
+})
+
 const UserSchema = new schema({
     name: {
         type: String,
@@ -62,4 +72,4 @@ const UserSchema = new schema({
 });
 
 const UserModel = mongoose.model('user', UserSchema)
-module.exports = { UserModel, userValidation, loginValidation }
+module.exports = { UserModel, userValidation, loginValidation,profileUpdateValidation }

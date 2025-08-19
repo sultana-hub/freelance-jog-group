@@ -1,7 +1,7 @@
 const httpStatusCode = require("../helper/httpStatusCode");
 const sendEmailVerificationOTP = require("../helper/sendOptVerify");
 const { hashedPassword, comparePassword } = require("../middleware/auth");
-const { UserModel, userValidation, loginValidation } = require("../model/User");
+const { UserModel, userValidation, loginValidation ,profileUpdateValidation} = require("../model/User");
 const jwt = require('jsonwebtoken')
 const transporter = require('../config/EmailConfig')
 const OtpModel = require('../model/OtpModel')
@@ -46,6 +46,7 @@ class UserAuthController {
             }
 
             // Check for duplicate email
+            // const isExistingUser = await UserModel.findOne({ email });
             const userWithEmail = await UserModel.aggregate([
                 {
                     $match: {
@@ -279,18 +280,37 @@ class UserAuthController {
     }
 
 
-    //dashboard
-    async dashboard(req, res) {
+    // Change password when logged in
+    async changePassword(req, res) {
         try {
-            return res.status(httpStatusCode.Ok).json({
-                status: true,
-                message: "Welcome to user dashboard",
-                data: req.user
-            })
+            const userId = req.user._id; // comes from auth middleware (JWT in headers)
+            const { currentPassword, newPassword, confirmPassword } = req.body;
 
-        } catch (error) {
-            console.log(error);
+            const user = await UserModel.findById(userId);
+            if (!user) {
+                return res.status(404).json({ status: false, message: "User not found" });
+            }
 
+            // verify current password
+            const isMatch = await bcrypt.compare(currentPassword, user.password);
+            if (!isMatch) {
+                return res.status(400).json({ status: false, message: "Current password is incorrect" });
+            }
+
+            // confirm match
+            if (newPassword !== confirmPassword) {
+                return res.status(400).json({ status: false, message: "Passwords do not match" });
+            }
+
+            // hash and save
+            const salt = await bcrypt.genSalt(10);
+            user.password = await bcrypt.hash(newPassword, salt);
+            await user.save();
+
+            res.status(200).json({ status: true, message: "Password updated successfully" });
+        } catch (err) {
+            console.error("Change password error:", err.message);
+            res.status(500).json({ status: false, message: "Something went wrong" });
         }
     }
 
@@ -347,15 +367,24 @@ class UserAuthController {
     async profileUpdate(req, res) {
         try {
             const userId = req.params.userId;
-
+          if (typeof req.body.skills === 'string') {
+                try {
+                    req.body.skills = JSON.parse(req.body.skills);
+                } catch (err) {
+                    req.body.skills = req.body.skills.split(',').map(skill => skill.trim());
+                }
+            }
             const updatePayload = {
-                userName: req.body.userName,
+                name: req.body.name,
                 email: req.body.email,
+                role: req.body.role,
+                skills: req.body.skills,
+                bio: req.body.bio,
                 profilePic: req.file ? req.file.path : undefined
             };
 
             // Validating with Joi
-            const { error, value } = userValidation.validate(updatePayload);
+            const { error, value } = profileUpdateValidation.validate(updatePayload);
             if (error) {
                 return res.status(httpStatusCode.BadRequest).json({
                     status: false,
@@ -365,10 +394,12 @@ class UserAuthController {
 
             // Cleaning undefined fields
             const updateFields = {};
-            if (value.userName) updateFields.userName = value.userName;
+            if (value.name) updateFields.name = value.name;
             if (value.email) updateFields.email = value.email;
             if (value.profilePic) updateFields.profilePic = value.profilePic;
-
+            if (value.role) updateFields.role = value.role;
+            if (value.skills) updateFields.skills = value.skills
+            if (value.bio) updateFields.bio = value.bio
             // Checking if email is being updated and already exists
             if (updateFields.email) {
                 const existing = await UserModel.aggregate([
@@ -412,9 +443,6 @@ class UserAuthController {
 
 
 
-
-
-
     /**update password */
     async updatePassword(req, res) {
         try {
@@ -449,6 +477,45 @@ class UserAuthController {
         }
     }
 
+
+    async forgetPasswordLink(req, res) {
+        try {
+            const { email } = req.body;
+            if (!email) {
+                return res.status(400).json({ status: false, message: "Email field is required" });
+            }
+            const user = await UserModel.findOne({ email });
+            if (!user) {
+                return res.status(200).json({ success: true, message: "Password reset email sent (if account exists)" });
+            }
+            // Generate token for password reset
+            const secret = user._id + process.env.WT_SECRET_KEY;
+            const token = jwt.sign({ userID: user._id }, secret, { expiresIn: '20m' });
+            // Reset Link and this link generate by frontend developer
+            const resetLink = `${process.env.FRONTEND_HOST}/reset-password/${user._id}/${token}`;
+            //console.log(resetLink);
+            // Send password reset email  
+            await transporter.sendMail({
+                from: process.env.EMAIL_FROM,
+                to: user.email,
+                subject: "Password Reset Link",
+                html: `
+                       <p>Hello ${user.userName},</p>
+                       <p>Please <a href="${resetLink}">click here</a> to reset your password.</p>
+                       <p>Or copy and paste this link in your browser:</p>
+                       <p><a href="${resetLink}">${resetLink}</a></p>
+                    `
+
+            });
+            // Send success response
+            res.status(200).json({ status: true, message: "Password reset email sent. Please check your email." });
+
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({ status: false, message: "Unable to send password reset email. Please try again later." });
+
+        }
+    }
 
 
     //reset password
@@ -488,91 +555,7 @@ class UserAuthController {
         }
     }
 
-    //forgotPassword  
-
-    async forgotPassword(req, res) {
-        try {
-            const { email } = req.body;
-
-            if (!email) {
-                return res.status(400).json({ status: false, message: "Email is required" });
-            }
-
-            const user = await UserModel.findOne({ email });
-            if (!user) {
-                // In production: don't reveal if email exists
-                return res.status(200).json({ status: true, message: "If this email is registered, a password reset link will be sent." });
-            }
-
-            // Create JWT secret per user
-            const secret = user._id + process.env.WT_SECRET_KEY;
-            const token = jwt.sign({ userID: user._id }, secret, { expiresIn: '20m' });
-
-            // Generate reset link
-            const resetLink = `${process.env.FRONTEND_HOST}/account/reset-password-confirm/${user._id}/${token}`;
-            //front end must create this route /account/reset-password-confirm/:userId/:token 
-            // Send email
-            await transporter.sendMail({
-                from: process.env.EMAIL_FROM,
-                to: user.email,
-                subject: "Password Reset Link",
-                html: `
-                <p>Hello ${user.userName},</p>
-                <p>You requested to reset your password. This link will expire in 20 minutes.</p>
-                <p><a href="${resetLink}">Click here to reset your password</a></p>
-                <p>If you didn't request this, please ignore this email.</p>
-            `
-            });
-
-            return res.status(200).json({
-                status: true,
-                message: "If this email is registered, a password reset link has been sent."
-            });
-
-        } catch (error) {
-            console.error("Forgot Password Error:", error);
-            return res.status(500).json({
-                status: false,
-                message: "Unable to send password reset email. Please try again later."
-            });
-        }
-    }
-
-
-    //reset password link
-
-    async resetPasswordLink(req, res) {
-        try {
-            const { email } = req.body;
-            if (!email) {
-                return res.status(400).json({ status: false, message: "Email field is required" });
-            }
-            const user = await UserModel.findOne({ email });
-            if (!user) {
-                return res.status(404).json({ status: false, message: "Email doesn't exist" });
-            }
-            // Generate token for password reset
-            const secret = user._id + process.env.WT_SECRET_KEY;
-            const token = jwt.sign({ userID: user._id }, secret, { expiresIn: '20m' });
-            // Reset Link and this link generate by frontend developer
-            const resetLink = `${process.env.FRONTEND_HOST}/account/reset-password-confirm/${user._id}/${token}`;
-            //console.log(resetLink);
-            // Send password reset email  
-            await transporter.sendMail({
-                from: process.env.EMAIL_FROM,
-                to: user.email,
-                subject: "Password Reset Link",
-                html: `<p>Hello ${user.userName},</p><p>Please <a href="${resetLink}">Click here</a> to reset your password.</p>`
-            });
-            // Send success response
-            res.status(200).json({ status: true, message: "Password reset email sent. Please check your email." });
-
-        } catch (error) {
-            console.log(error);
-            res.status(500).json({ status: false, message: "Unable to send password reset email. Please try again later." });
-
-        }
-    }
+   
 
 
 
