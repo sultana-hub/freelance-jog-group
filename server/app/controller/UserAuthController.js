@@ -1,7 +1,7 @@
 const httpStatusCode = require("../helper/httpStatusCode");
 const sendEmailVerificationOTP = require("../helper/sendOptVerify");
 const { hashedPassword, comparePassword } = require("../middleware/auth");
-const { UserModel, userValidation, loginValidation ,profileUpdateValidation} = require("../model/User");
+const { UserModel, userValidation, loginValidation, profileUpdateValidation } = require("../model/User");
 const jwt = require('jsonwebtoken')
 const transporter = require('../config/EmailConfig')
 const OtpModel = require('../model/OtpModel')
@@ -258,7 +258,8 @@ class UserAuthController {
             const token = jwt.sign({
                 _id: user._id,
                 userName: user.userName,
-                email: user.email
+                email: user.email,
+                role: user.role
             }, process.env.JWT_SECRET_KEY, { expiresIn: "2h" })
 
             return res.status(httpStatusCode.Ok).json({
@@ -367,7 +368,7 @@ class UserAuthController {
     async profileUpdate(req, res) {
         try {
             const userId = req.params.userId;
-          if (typeof req.body.skills === 'string') {
+            if (typeof req.body.skills === 'string') {
                 try {
                     req.body.skills = JSON.parse(req.body.skills);
                 } catch (err) {
@@ -555,9 +556,101 @@ class UserAuthController {
         }
     }
 
-   
+
+    async getAllClient(req, res) {
+        try {
+
+            const clients = await UserModel.aggregate([
+                {
+                    $match: {
+                        role: "client"
+                    }
+                },
+                {
+                    $project: {
+                        _id: 1,
+                        name: 1,
+                        email: 1,
+                        profilePic: 1,
+                        role: 1,
+                        bio: 1,
+                        skills: 1,
+                        createdAt: 1
+                    }
+                },
+                {
+                    $sort: {
+                        createdAt: -1
+                    }// latest clients first
+                }
+
+            ])
+
+            return res.status(httpStatusCode.Ok).json({
+                status: true,
+                message: "All Clients Fetched Successfully",
+                data: clients
+            })
+        }
 
 
+        catch (error) {
+            console.error("Error fetching clients:", error);
+            return res.status(httpStatusCode.InternalServerError).json({
+                status: false,
+                message: "Server error while fetching clients"
+            });
+        }
+
+    }
+
+
+
+    async getAllFreelancer(req, res) {
+        try {
+
+            const freelancers = await UserModel.aggregate([
+                {
+                    $match: {
+                        role: "freelancer"
+                    }
+                },
+                {
+                    $project: {
+                        _id: 1,
+                        name: 1,
+                        email: 1,
+                        profilePic: 1,
+                        role: 1,
+                        bio: 1,
+                        skills: 1,
+                        createdAt: 1
+                    }
+                },
+                {
+                    $sort: {
+                        createdAt: -1
+                    }// latest clients first
+                }
+
+            ])
+
+            return res.status(httpStatusCode.Ok).json({
+                status: true,
+                message: "All Freelancer Fetched Successfully",
+                data: freelancers
+            })
+        }
+
+
+        catch (error) {
+            console.error("Error fetching freelancer:", error);
+            return res.status(httpStatusCode.InternalServerError).json({
+                status: false,
+                message: "Server error while fetching clients"
+            });
+        }
+    }
 
 }
 

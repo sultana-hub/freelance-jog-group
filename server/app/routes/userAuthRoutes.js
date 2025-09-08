@@ -29,10 +29,14 @@ router.post('/forgot-password', UserAuthController.forgetPasswordLink);
 //reset password page to submit new password
 router.post('/reset-password/:id/:token', UserAuthController.resetPassword);
 
-
 // api/auth/profile/:userId
 router.get('/profile/:userId', AuthCheck, UserAuthController.getProfile)
 router.put('/profile/:userId/update/', AuthCheck, userImageUpload.single('profilePic'), UserAuthController.profileUpdate)
 
+// api/auth/all-clients
+router.get('/all-clients',UserAuthController.getAllClient)
+
+// api/auth/all-freelancer
+router.get('/all-freelancer',UserAuthController.getAllFreelancer)
 
 module.exports = router

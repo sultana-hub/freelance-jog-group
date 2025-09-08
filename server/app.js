@@ -37,15 +37,26 @@ app.set("views", "views")
 app.use(express.static(__dirname + '/public'));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 
+//routes front end 
 //routes catgeory
 const categoryRoutes =require('./app/routes/categoryRoutes')
 app.use('/api',categoryRoutes )
-// //auth route
+// user auth route
 const userAuthRoues=require('./app/routes/userAuthRoutes')
 app.use ('/api/auth',userAuthRoues)
+// job route
+const jobRoute=require('./app/routes/jobRoutes')
+app.use('/api',jobRoute)
+
 // //admin route
 // const adminRoute = require('./app/routes/adminRoutes')
 // app.use( adminRoute)
+
+app.get("/", (req, res) => {
+  res.send("✅ Freelance Job Board API is running");
+});
+
+
 const port=2001
 
 app.listen(port,()=>{

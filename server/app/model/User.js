@@ -9,7 +9,7 @@ const userValidation = Joi.object({
     email: Joi.string().email().required().trim(),
     password: Joi.string().required().min(4).trim(),
     profilePic: Joi.string().required().trim(),
-    role: Joi.string().valid('freelancer', 'client').required().trim(),
+    role: Joi.string().valid('admin','freelancer', 'client').required().trim(),
     skills: Joi.array().items(Joi.string().trim()).optional(),
     bio: Joi.string().optional().min(3).trim(),
 })
@@ -24,7 +24,7 @@ const profileUpdateValidation=Joi.object({
     email: Joi.string().email().optional().trim(),
     password: Joi.string().optional().trim(),
     profilePic: Joi.string().required().trim(),
-    role: Joi.string().valid('freelancer', 'client').required().trim(),
+    role: Joi.string().valid('admin','freelancer', 'client').required().trim(),
     skills: Joi.array().items(Joi.string().trim()).optional(),
     bio: Joi.string().optional().min(3).trim(),
 })
