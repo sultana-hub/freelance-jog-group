@@ -8,6 +8,7 @@ const path=require('path')
 const fs=require('fs')
 const methodOverride = require('method-override');
 const session = require('express-session');
+const adminRoutes = require('./app/routes/admin/adminRoutes');
 
 dbCon()
 const app=express()
@@ -32,7 +33,7 @@ app.use(express.urlencoded({extended:true}))
 app.use(methodOverride('_method'));
 // set ejs engine
 app.set("view engine", "ejs")
-app.set("views", "views")
+// app.set("views", "views")
 
 app.use(express.static(__dirname + '/public'));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
@@ -47,13 +48,15 @@ app.use ('/api/auth',userAuthRoues)
 // job route
 const jobRoute=require('./app/routes/jobRoutes')
 app.use('/api',jobRoute)
+app.use("/admin",adminRoutes)
 
 // //admin route
 // const adminRoute = require('./app/routes/adminRoutes')
 // app.use( adminRoute)
 
 app.get("/", (req, res) => {
-  res.send("✅ Freelance Job Board API is running");
+  // res.send("✅ Freelance Job Board API is running");
+  res.redirect("/admin/login")
 });
 
 
