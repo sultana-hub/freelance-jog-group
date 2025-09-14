@@ -1,6 +1,7 @@
 const { default: slugify } = require("slugify");
 const httpStatusCode = require("../../helper/httpStatusCode");
 const { CategoryModel, categoryValidation } = require("../../model/Category");
+const mongoose = require("mongoose")
 
 
 
