@@ -1,13 +1,16 @@
+const CategoryModel = require("../../model/Category")
 
-const httpStatusCode = require("../helper/httpStatusCode");
-const { CategoryModel, categoryValidation } = require("../model/Category");
-const fs = require('fs').promises
-const path = require('path')
-const slugify = require('slugify')
-const mongoose = require('mongoose')
+
 class CategoryController {
+    async getAllCategories(req, res) {
+        const categories = await CategoryModel.find({});
+        // res.render("category/list");
+    }
 
     async createCategory(req, res) {
+        // res.render("category/create");
+    }
+    async createCategoryPost(req, res) {
         try {
             const { name } = req.body;
 
@@ -30,15 +33,9 @@ class CategoryController {
             const categoryData = new CategoryModel({ name: name.trim() });
             const data = await categoryData.save();
 
-            // EJS Admin Panel redirect
-            // return res.redirect(`/category/list`);
+            return res.redirect(`/admin/categories`);
 
-            // React Admin Panel alternative:
-            return res.status(httpStatusCode.Created).json({
-                status: true,
-                message: 'Category created successfully',
-                data
-            });
+
 
         } catch (error) {
             return res.status(httpStatusCode.InternalServerError).json({
@@ -48,9 +45,14 @@ class CategoryController {
         }
     }
 
-
     async updateCategory(req, res) {
         const { id } = req.params;
+        const category = await CategoryModel.findById(id);
+        // res.render("category/update");
+    }
+
+    async updateCategoryPut(req, res) {
+          const { id } = req.params;
         const { name } = req.body;
 
         try {
@@ -97,11 +99,7 @@ class CategoryController {
             }
 
             console.log("Category updated successfully");
-            return res.status(httpStatusCode.Ok).json({
-                status: true,
-                message: "Category updated successfully.",
-                data: category
-            });
+            res.redirect(`/admin/categories`);
 
         } catch (error) {
             console.error("Update error:", error.message);
@@ -110,10 +108,10 @@ class CategoryController {
                 message: "Server error: " + error.message
             });
         }
+
+
+
     }
-
-
- 
     async deleteCategory(req, res) {
         try {
             const { id } = req.params;
@@ -135,62 +133,15 @@ class CategoryController {
                 });
             }
 
-            return res.status(httpStatusCode.Ok).json({
-                status: true,
-                message: "Category deleted successfully",
-                deletedData: delCat // optional, useful for frontend
-            });
+            res.redirect(`/admin/categories`);
         } catch (error) {
             return res.status(httpStatusCode.InternalServerError).json({
                 status: false,
                 message: error.message
             });
         }
+
     }
-
-    async getAllCategories(req, res) {
-        try {
-            const categories = await CategoryModel.find().sort({ createdAt: -1 });
-
-            return res.status(httpStatusCode.Ok).json({
-                status: true,
-                message: "Categories fetched successfully",
-                total: categories.length,
-                data: categories
-            });
-
-        } catch (error) {
-            return res.status(500).json({
-                status: false,
-                message: error.message
-            });
-        }
-    }
-
-    // async getAllCategories(req, res) {
-    //     try {
-    //         const categories = await CategoryModel
-    //             .find()
-    //             .select("_id name") // only what frontend needs
-    //             .sort({ createdAt: -1 });
-
-    //         return res.status(200).json({
-    //             status: true,
-    //             message: "Categories fetched successfully",
-    //             total: categories.length,
-    //             data: categories,
-    //         });
-    //     } catch (error) {
-    //         return res.status(500).json({
-    //             status: false,
-    //             message: error.message,
-    //         });
-    //     }
-    // }
-
-
-
 }
 
-
-module.exports = new CategoryController()
+module.exports = new CategoryController();
