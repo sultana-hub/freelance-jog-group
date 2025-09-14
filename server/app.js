@@ -9,6 +9,7 @@ const fs=require('fs')
 const methodOverride = require('method-override');
 const session = require('express-session');
 const adminRoutes = require('./app/routes/admin/adminRoutes');
+const cookieParser = require('cookie-parser');
 
 dbCon()
 const app=express()
@@ -18,6 +19,7 @@ app.use((req, res, next) => {
     res.setHeader("Content-Security-Policy", "default-src * 'self' data: blob:;");
     next();
 });
+app.use(cookieParser());
 
 app.use(session({
   secret: 'myquizsecret',
@@ -47,6 +49,7 @@ const userAuthRoues=require('./app/routes/userAuthRoutes')
 app.use ('/api/auth',userAuthRoues)
 // job route
 const jobRoute=require('./app/routes/jobRoutes')
+// const cookieParser = require('cookie-parser')
 app.use('/api',jobRoute)
 app.use("/admin",adminRoutes)
 
