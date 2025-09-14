@@ -23,8 +23,8 @@ router.get("/categories",isLogin, categoryController.getAllCategories);
 router.get("/category-create",isLogin, categoryController.createCategory);
 router.post("/category-create", categoryController.createCategoryPost);
 router.get("/category-update/:id",isLogin, categoryController.updateCategory);
-router.put("/category-update/:id", categoryController.updateCategoryPut); 
-router.delete("/category-delete/:id",isLogin, categoryController.deleteCategory);
+router.post("/category-update/:id", categoryController.updateCategoryPost); 
+router.post("/category-delete/:id",isLogin, categoryController.deleteCategory);
 
 
 // User Management Routes
@@ -33,7 +33,7 @@ router.get("/user-create",isLogin, userManageController.createUser);
 router.post("/user-create", userManageController.createUserPost);
 router.get("/user-update/:id",isLogin, userManageController.updateUser);
 router.put("/user-update/:id", userManageController.updateUserPut); 
-router.delete("/user-delete/:id",isLogin, userManageController.deleteUser); 
+router.post("/user-delete/:id",isLogin, userManageController.deleteUser); 
 
 
 module.exports = router;

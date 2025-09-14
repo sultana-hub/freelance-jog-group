@@ -57,8 +57,8 @@ app.use("/admin",adminRoutes)
 // const adminRoute = require('./app/routes/adminRoutes')
 // app.use( adminRoute)
 
-const categoryAdminRoutes = require("./app/routes/categoryAdminRoutes");
-app.use("/admin", categoryAdminRoutes);
+// const categoryAdminRoutes = require("./app/routes/categoryAdminRoutes");
+// app.use("/admin", categoryAdminRoutes);
 
 
 app.get("/", (req, res) => {

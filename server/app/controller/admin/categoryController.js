@@ -1,14 +1,17 @@
-const CategoryModel = require("../../model/Category")
+const { default: slugify } = require("slugify");
+const httpStatusCode = require("../../helper/httpStatusCode");
+const { CategoryModel, categoryValidation } = require("../../model/Category");
+
 
 
 class CategoryController {
     async getAllCategories(req, res) {
         const categories = await CategoryModel.find({});
-        // res.render("category/list");
+        res.render("category/category_manage", { categories });
     }
 
     async createCategory(req, res) {
-        // res.render("category/create");
+        res.render("category/add_category");
     }
     async createCategoryPost(req, res) {
         try {
@@ -48,10 +51,10 @@ class CategoryController {
     async updateCategory(req, res) {
         const { id } = req.params;
         const category = await CategoryModel.findById(id);
-        // res.render("category/update");
+        res.render("category/edit_category", { category });
     }
 
-    async updateCategoryPut(req, res) {
+    async updateCategoryPost(req, res) {
           const { id } = req.params;
         const { name } = req.body;
 
