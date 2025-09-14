@@ -2,6 +2,7 @@ const express=require("express")
 const CategoryController=require('../controller/CategoryController')
 const router=express.Router()
 
+
 //category admin route
 
 //create category
