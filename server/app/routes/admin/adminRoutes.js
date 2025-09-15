@@ -16,6 +16,7 @@ router.post("/logout", AdminAuthenticationController.logout);
 
 // Admin Routes 
 router.get("/dashboard",isLogin,adminController.dashboard )
+router.get("/profile",isLogin ,adminController.profile)
 
 
 // Admin Category Routes
