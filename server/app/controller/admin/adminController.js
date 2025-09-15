@@ -46,6 +46,16 @@ class AdminController {
             res.status(500).json({ status: false, message: "Server error while fetching dashboard data" });
         }
     }
+
+    async profile (req, res){
+        try {
+            const loginUser = req.user;
+            res.render('profile', { title: 'Admin Profile', loginUser });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ status: false, message: "Server error while fetching dashboard data" });
+        }
+    }
 }
 
 module.exports = new AdminController();
