@@ -47,9 +47,10 @@ class AdminAuthenticationController {
             }
             const token = jwt.sign({
                 _id: user._id,
-                userName: user.userName,
+                name: user.name,
                 email: user.email,
-                role: user.role
+                role: user.role,
+                profilePic: user.profilePic
             }, process.env.JWT_SECRET_KEY, { expiresIn: "2h" })
 
               res.cookie('token', token, {

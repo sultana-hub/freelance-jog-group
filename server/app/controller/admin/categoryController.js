@@ -8,11 +8,14 @@ const mongoose = require("mongoose")
 class CategoryController {
     async getAllCategories(req, res) {
         const categories = await CategoryModel.find({});
-        res.render("category/category_manage", { categories });
+        const loginUser = req.user;
+        res.render("category/category_manage", { categories , loginUser });
     }
 
     async createCategory(req, res) {
-        res.render("category/add_category");
+        const loginUser = req.user;
+
+        res.render("category/add_category", { loginUser });
     }
     async createCategoryPost(req, res) {
         try {
@@ -52,7 +55,9 @@ class CategoryController {
     async updateCategory(req, res) {
         const { id } = req.params;
         const category = await CategoryModel.findById(id);
-        res.render("category/edit_category", { category });
+        const loginUser = req.user;
+
+        res.render("category/edit_category", { category , loginUser});
     }
 
     async updateCategoryPost(req, res) {
