@@ -1,5 +1,7 @@
-document.addEventListener("DOMContentLoaded", function () {
 
+document.addEventListener("DOMContentLoaded", function () {
+    // const {users}= window.dashboardData
+    // console.log(users)
   // User Chart
   const userPolarChart = document.getElementById("userPolarChart");
   if(userPolarChart){
@@ -9,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
         labels: ["admin", "freelancer", "client"],
         datasets: [
           {
-            data: [1245, 522, 1850, 255],
+            data: [1245, 522, 1850],
             backgroundColor: [
               "rgba(26,111,196,0.8)",
               "rgba(44,140,224,0.8)",
