@@ -1,6 +1,37 @@
 <title><%= title %></title>
 <%- include("./partials/header.ejs") %>
 
-<h1>Profile</h1>
+ <div class="content-wrapper">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-12 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <h3 class="card-title">Profile</h3>
+                <div class="profile-info">
+                  <div class="profile-name">John Doe</div>
+                  <div class="profile-role">Web Developer</div>
+                </div>
+                <div class="profile-details">
+                  <div class="profile-detail">
+                    <label>Email:</label>
+                    <span>john.doe@example.com</span>
+                  </div>
+                  <div class="profile-detail">
+                    <label>Phone:</label>
+                    <span>+1 123 456 7890</span>
+                  </div>
+                  <div class="profile-detail">
+                    <label>Address:</label>
+                    <span>123 Main St, City, State</span>
+                  </div>
+                </div>
+                <button class="btn btn-primary">Edit Profile</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
 <%-include("./partials/footer.ejs")%>

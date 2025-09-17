@@ -1,4 +1,7 @@
 
+
+console.log("dashboard charts")
+
 document.addEventListener("DOMContentLoaded", function () {
     // const {users}= window.dashboardData
     // console.log(users)
