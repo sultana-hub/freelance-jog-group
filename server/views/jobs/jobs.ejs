@@ -1,0 +1,64 @@
+<%- include("../partials/header") %>
+
+<div class="container mt-5">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Manage Jobs</h3>
+  </div>
+
+  <div class="card shadow-lg rounded-3">
+    <div class="card-body">
+      <h4 class="card-title">Jobs Table</h4>
+
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead class="table-header-custom">
+            <tr>
+              <th>SL. No</th>
+              <th>Client Name</th>
+              <th>Title</th>
+              <th>Category</th>
+              <th>Budget</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (jobs && jobs.length > 0) { %>
+              <% jobs.forEach((job, index) => { %>
+                <tr>
+                  <td><%= index + 1 %></td>
+                  <td><%= job.clientId?.name %></td>
+                  <td><%= job.title %></td>
+                  <td><%= job.categoryId?.name %></td>
+                  <td>₹ <%= job.budget %></td>
+                  <td>
+                    <% if (job.status === "open") { %>
+                      <span class="badge bg-success">Open</span>
+                    <% } else if (job.status === "closed") { %>
+                      <span class="badge bg-danger">Closed</span>
+                    <% } else if (job.status === "in_progress") { %>
+                      <span class="badge bg-warning text-dark">In Progress</span>
+                    <% } else { %>
+                      <span class="badge bg-secondary"><%= job.status %></span>
+                    <% } %>
+                  </td>
+                  <td>
+                    <form action="/admin/job-delete/<%= job._id %>" method="POST">
+                      <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                  </td>
+                </tr>
+              <% }) %>
+            <% } else { %>
+              <tr>
+                <td colspan="7" class="text-center">No jobs found</td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include("../partials/footer") %>

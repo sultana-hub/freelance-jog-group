@@ -44,6 +44,7 @@ const jobSchema = new mongoose.Schema({
     enum: ["open", "closed", "in_progress"],
     default: "open"
   },
+  
   createdAt: {
     type: Date,
     default: Date.now
