@@ -6,15 +6,16 @@
     <a href="/admin/user-create" class="btn btn-success">+ Add User</a>
   </div>
 
-  <div class="card shadow-sm rounded-3">
+  <div class="card shadow-lg rounded-3">
     <div class="card-body">
       <h4 class="card-title">User Table</h4>
 
       <div class="table-responsive">
         <table class="table table-striped">
-          <thead>
+          <thead class="table-header-custom">
             <tr>
               <th>SL. No</th>
+              <th>Profile Pic</th>
               <th>Name</th>
               <th>Email</th>
               <th>Role</th>
@@ -26,12 +27,13 @@
               <% users.forEach((user, index) => { %>
                 <tr>
                   <td><%= index + 1 %></td>
+                  <td><img src="/<%= user.profilePic %>" alt="Profile Pic" class="" width="50"></td>
                   <td><%= user.name %></td>
                   <td><%= user.email %></td>
                   <td><%= user.role %></td>
                   <td>
                     <div class="d-flex">
-                      <a href="/admin/user-update/<%= user._id %>" class="btn btn-warning btn-sm me-2">Edit</a>
+                      <a href="/admin/user-update/<%= user._id %>" class="btn btn-warning btn-sm me-2 mr-3">Edit</a>
                       <form action="/admin/user-delete/<%= user._id %>" method="POST">
                         <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                       </form>

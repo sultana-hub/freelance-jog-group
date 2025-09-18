@@ -12,11 +12,12 @@
      
 
       <div class="table-responsive">
-        <table class="table">
-          <thead>
+        <table class="table table-striped">
+          <thead class="table-header-custom">
             <tr>
               <th>SL. No</th>
               <th>Category</th>
+              <th>Slug</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -26,6 +27,7 @@
                 <tr>
                   <td><%= index + 1 %></td>
                   <td><%= category.name %></td>
+                  <td><%= category.slug %></td>
                   <td>
                     <div class="d-flex">
                       <div class="mr-5">
