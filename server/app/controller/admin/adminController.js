@@ -50,6 +50,7 @@ class AdminController {
     async profile (req, res){
         try {
             const loginUser = req.user;
+            console.log("Login User" ,loginUser)
             res.render('profile', { title: 'Admin Profile', loginUser });
         } catch (error) {
             console.error(error);

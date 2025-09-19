@@ -1,37 +1,37 @@
 <title><%= title %></title>
 <%- include("./partials/header.ejs") %>
 
- <div class="content-wrapper">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-md-12 grid-margin stretch-card">
-            <div class="card">
-              <div class="card-body">
-                <h3 class="card-title">Profile</h3>
-                <div class="profile-info">
-                  <div class="profile-name">John Doe</div>
-                  <div class="profile-role">Web Developer</div>
-                </div>
-                <div class="profile-details">
-                  <div class="profile-detail">
-                    <label>Email:</label>
-                    <span>john.doe@example.com</span>
-                  </div>
-                  <div class="profile-detail">
-                    <label>Phone:</label>
-                    <span>+1 123 456 7890</span>
-                  </div>
-                  <div class="profile-detail">
-                    <label>Address:</label>
-                    <span>123 Main St, City, State</span>
-                  </div>
-                </div>
-                <button class="btn btn-primary">Edit Profile</button>
+<div class="content-wrapper">
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-md-8 grid-margin stretch-card">
+        <div class="card profile-card shadow-lg rounded-3">
+          <div class="card-body text-center">
+            
+            <!-- Profile Pic -->
+            <div class="profile-pic-wrapper">
+              <img src="/<%= loginUser.profilePic %>" alt="profile" class="profile-pic"/>
+            </div>
+
+            <!-- Name & Role -->
+            <h3 class="profile-name"><%= loginUser.name %></h3>
+            <p class="profile-role"><%= loginUser.role %></p>
+
+            <!-- Details -->
+            <div class="profile-details mt-4">
+              <div class="detail-item">
+                <label>Email:</label>
+                <span><%= loginUser.email %></span>
               </div>
             </div>
+
+            <!-- Action Button -->
+            <!-- <button class="btn btn-edit mt-4">Edit Profile</button> -->
           </div>
         </div>
       </div>
     </div>
+  </div>
+</div>
 
-<%-include("./partials/footer.ejs")%>
+<%- include("./partials/footer.ejs") %>
