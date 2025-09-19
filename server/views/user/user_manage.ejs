@@ -3,16 +3,35 @@
 <div class="container mt-5">
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h3>Manage Users</h3>
-    <a href="/admin/user-create" class="btn btn-success">+ Add User</a>
+    <!-- <a href="/admin/user-create" class="btn btn-success">+ Add User</a> -->
   </div>
 
   <div class="card shadow-lg rounded-3">
     <div class="card-body">
       <h4 class="card-title">User Table</h4>
+      <br>
 
+      <!-- Tabs + Search -->
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <ul class="nav nav-pills" id="roleTabs">
+          <li class="nav-item"><a class="nav-link active" data-role="all" href="#">All</a></li>
+          <li class="nav-item"><a class="nav-link" data-role="admin" href="#">Admin</a></li>
+          <li class="nav-item"><a class="nav-link" data-role="client" href="#">Client</a></li>
+          <li class="nav-item"><a class="nav-link" data-role="freelancer" href="#">Freelancer</a></li>
+        </ul>
+
+        <div class="d-flex align-items-center ">
+          <input type="text" id="userSearch" class="form-control searchBox" placeholder="Search by name or email">
+          <div class="d-flex align-items-center justify-content-center searchIcon">
+          <i class="fa fa-search"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table -->
       <div class="table-responsive">
-        <table class="table table-striped">
-          <thead class="table-header-custom">
+        <table class="table table-striped" id="usersTable">
+          <thead class="table-header-custom" style="background:#4B49AC; color:white;">
             <tr>
               <th>SL. No</th>
               <th>Profile Pic</th>
@@ -23,17 +42,17 @@
             </tr>
           </thead>
           <tbody>
-            <% if (users && users.length > 0) { %>
-              <% users.forEach((user, index) => { %>
-                <tr>
+            <% if (users && users.length> 0) { %>
+              <% users.forEach((user, index)=> { %>
+                <tr data-role="<%= user.role.toLowerCase() %>">
                   <td><%= index + 1 %></td>
-                  <td><img src="/<%= user.profilePic %>" alt="Profile Pic" class="" width="50"></td>
-                  <td><%= user.name %></td>
-                  <td><%= user.email %></td>
+                  <td><img src="/<%= user.profilePic %>" alt="Profile Pic" width="50"></td>
+                  <td class="user-name"><%= user.name %></td>
+                  <td class="user-email"><%= user.email %></td>
                   <td><%= user.role %></td>
                   <td>
                     <div class="d-flex">
-                      <a href="/admin/user-update/<%= user._id %>" class="btn btn-warning btn-sm me-2 mr-3">Edit</a>
+                      <a href="/admin/user-update/<%= user._id %>" class="btn btn-warning btn-sm mr-2">Edit</a>
                       <form action="/admin/user-delete/<%= user._id %>" method="POST">
                         <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                       </form>
@@ -43,14 +62,25 @@
               <% }) %>
             <% } else { %>
               <tr>
-                <td colspan="5" class="text-center">No users found</td>
+                <td colspan="6" class="text-center">No users found</td>
               </tr>
             <% } %>
           </tbody>
         </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="d-flex justify-content-between align-items-center mt-3">
+        <span id="pageInfo"></span>
+        <div>
+          <button id="prevPage" class="btn btn-secondary btn-sm">Prev</button>
+          <button id="nextPage" class="btn btn-secondary btn-sm">Next</button>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
 <%- include("../partials/footer") %>
+
+<script src="/customjs/userManage.js"></script>

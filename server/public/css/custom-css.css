@@ -13,3 +13,42 @@
   color: #fff !important;
 }
 
+
+
+/* User Manage Page */
+
+  /* Tab active background */
+  #roleTabs .nav-link.active {
+    background-color: #4B49AC !important;
+    color: #fff !important;
+  }
+
+  /* Tab text color */
+  #roleTabs .nav-link {
+    color: #4B49AC !important;
+    border: 1px solid #4B49AC !important;
+    margin-right: 5px;
+  }
+
+  /* Hover effect */
+  #roleTabs .nav-link:hover {
+    background-color: #4B49AC !important;
+    color: #fff !important;
+  }
+
+
+  .searchBox{
+    border: 1px solid #4B49AC !important;
+    border-radius: 5px;
+    padding: 5px;
+    width: 300px;
+    margin-right: 5px ;
+  }
+  .searchIcon{
+    background-color: #4B49AC;
+    color: #fff;
+    padding: 5px;
+    border-radius: 100%;
+    width: 40px;
+    height: 40px;
+  }

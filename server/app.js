@@ -69,6 +69,9 @@ app.get("/", (req, res) => {
   res.redirect("/admin/login")
 });
 
+app.use((req, res) => {
+  res.status(404).render('pageNotFound');
+});
 
 const port=2001
 

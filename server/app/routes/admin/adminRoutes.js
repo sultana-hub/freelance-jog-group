@@ -33,8 +33,8 @@ router.post("/category-delete/:id",isLogin, categoryController.deleteCategory);
 
 // User Management Routes
 router.get("/users",isLogin, userManageController.getAllUsers);
-router.get("/user-create",isLogin, userManageController.createUser);
-router.post("/user-create", userImageUpload.single("profilePic"), userManageController.createUserPost);
+// router.get("/user-create",isLogin, userManageController.createUser);
+// router.post("/user-create", userImageUpload.single("profilePic"), userManageController.createUserPost);
 router.get("/user-update/:id",isLogin, userManageController.updateUser);
 router.post("/user-update/:id",userImageUpload.single("profilePic"), userManageController.updateUserPut); 
 router.post("/user-delete/:id",isLogin, userManageController.deleteUser);
@@ -43,6 +43,8 @@ router.post("/user-delete/:id",isLogin, userManageController.deleteUser);
 // Job Management Routes
 router.get("/jobs",isLogin, jobController.getAllJobs);
 router.post("/job-delete/:id",isLogin, jobController.deleteJob);
+
+
 
 
 

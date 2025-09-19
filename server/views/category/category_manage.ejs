@@ -9,11 +9,18 @@
   <div class="card shadow-lg rounded-3">
     <div class="card-body">
       <h4 class="card-title">Category Table</h4>
-     
+
+      <!-- Search -->
+      <div class="d-flex align-items-center justify-content-end mb-3 " style="max-width:300px;">
+        <input type="text" id="categorySearch" class="form-control searchBox" placeholder="Search by name or slug">
+        <div class="d-flex align-items-center justify-content-center searchIcon ms-2">
+          <i class="fa fa-search"></i>
+        </div>
+      </div>
 
       <div class="table-responsive">
-        <table class="table table-striped">
-          <thead class="table-header-custom">
+        <table class="table table-striped" id="categoryTable">
+          <thead class="table-header-custom" style="background:#4B49AC; color:white;">
             <tr>
               <th>SL. No</th>
               <th>Category</th>
@@ -26,16 +33,16 @@
               <% categories.forEach((category, index) => { %>
                 <tr>
                   <td><%= index + 1 %></td>
-                  <td><%= category.name %></td>
-                  <td><%= category.slug %></td>
+                  <td class="cat-name"><%= category.name %></td>
+                  <td class="cat-slug"><%= category.slug %></td>
                   <td>
                     <div class="d-flex">
-                      <div class="mr-5">
-                        <a href="/admin/category-update/<%= category._id %>" class="btn btn-warning btn-sm ">Edit</a>
+                      <div class="me-3">
+                        <a href="/admin/category-update/<%= category._id %>" class="btn btn-warning btn-sm">Edit</a>
                       </div>
-                      <div >
+                      <div>
                         <form action="/admin/category-delete/<%= category._id %>" method="POST">
-                        <button type="submit" class="btn btn-danger btn-sm ">Delete</button>
+                          <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                         </form>
                       </div>
                     </div>
@@ -44,11 +51,20 @@
               <% }) %>
             <% } else { %>
               <tr>
-                <td colspan="3" class="text-center">No categories available</td>
+                <td colspan="4" class="text-center">No categories available</td>
               </tr>
             <% } %>
           </tbody>
         </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="d-flex justify-content-between align-items-center mt-3">
+        <span id="catPageInfo"></span>
+        <div>
+          <button id="catPrevPage" class="btn btn-secondary btn-sm">Prev</button>
+          <button id="catNextPage" class="btn btn-secondary btn-sm">Next</button>
+        </div>
       </div>
     </div>
   </div>
@@ -56,3 +72,4 @@
 
 <%- include("../partials/footer") %>
 
+<script src="/customjs/categoryPagination.js"></script>

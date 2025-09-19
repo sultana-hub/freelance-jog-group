@@ -16,55 +16,55 @@ class UserManageController {
         }
     }
 
-    async createUser(req, res) {
-        try {
-            const loginUser = req.user;
-            res.render("user/add_user" , { loginUser });
+    // async createUser(req, res) {
+    //     try {
+    //         const loginUser = req.user;
+    //         res.render("user/add_user" , { loginUser });
 
-        } catch (err) {
-            console.log(err)
-            res.status(500).send("Error loading create user form: " + err.message);
-        }
-    }
+    //     } catch (err) {
+    //         console.log(err)
+    //         res.status(500).send("Error loading create user form: " + err.message);
+    //     }
+    // }
 
-    async createUserPost(req, res) {
-        try {
+    // async createUserPost(req, res) {
+    //     try {
 
-          const { name , email , password , role } = req.body;
+    //       const { name , email , password , role } = req.body;
 
-        if (!name || !email || !password || !role) {
-            return res.status(400).send("All fields are required");
-        }
+    //     if (!name || !email || !password || !role) {
+    //         return res.status(400).send("All fields are required");
+    //     }
 
-        const existingUser = await UserModel.findOne({ email });
-        if (existingUser) {
-            return res.status(400).send("User already exists");
-        }
+    //     const existingUser = await UserModel.findOne({ email });
+    //     if (existingUser) {
+    //         return res.status(400).send("User already exists");
+    //     }
 
-        // Handle file upload
-        let profilePicPath = null;
-        if (req.file) {
-            profilePicPath = req.file.path;
-        }
+    //     // Handle file upload
+    //     let profilePicPath = null;
+    //     if (req.file) {
+    //         profilePicPath = req.file.path;
+    //     }
 
-        const hashedPassword = await bcrypt.hash(password, 10);
+    //     const hashedPassword = await bcrypt.hash(password, 10);
 
-        await UserModel.create({
-            name,
-            email,
-            isVerified: true,
-            password: hashedPassword,
-            role,
-            profilePic: profilePicPath 
-        });
+    //     await UserModel.create({
+    //         name,
+    //         email,
+    //         isVerified: true,
+    //         password: hashedPassword,
+    //         role,
+    //         profilePic: profilePicPath 
+    //     });
 
 
-            res.redirect("/admin/users");
+    //         res.redirect("/admin/users");
 
-        } catch (err) {
-            res.status(500).send("Error creating user: " + err.message);
-        }
-    }
+    //     } catch (err) {
+    //         res.status(500).send("Error creating user: " + err.message);
+    //     }
+    // }
 
     async updateUser(req, res) {
         try {
