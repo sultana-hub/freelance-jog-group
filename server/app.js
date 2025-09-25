@@ -9,7 +9,7 @@ const fs=require('fs')
 const methodOverride = require('method-override');
 const session = require('express-session');
 const adminRoutes = require('./app/routes/admin/adminRoutes');
-const bidRoutes = require('./app/routes/bidRoutes')
+
 const cookieParser = require('cookie-parser');
 
 dbCon()
@@ -51,6 +51,7 @@ app.use ('/api/auth',userAuthRoues)
 // job route
 const jobRoute=require('./app/routes/jobRoutes')
 //bid route
+const bidRoutes = require('./app/routes/bidRoutes')
 app.use('/api/bids',bidRoutes)
 // const cookieParser = require('cookie-parser')
 app.use('/api',jobRoute)

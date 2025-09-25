@@ -1,4 +1,17 @@
 const mongoose = require('mongoose');
+const Joi = require("joi");
+
+const bidsValidation = Joi.object({
+  bidAmount: Joi.number().min(1).required(),
+  coverLetter: Joi.string().required(), 
+ 
+});
+
+
+const bidStatusValidation = Joi.object({
+  status: Joi.string().valid("accepted", "rejected").required()
+});
+
 
 
 const bidSchema = new mongoose.Schema({
@@ -31,5 +44,5 @@ const bidSchema = new mongoose.Schema({
   }
 });
 
-const Bid = mongoose.model('Bid', bidSchema);
-module.exports = Bid;
+const BidModel = mongoose.model('bid', bidSchema);
+module.exports ={ BidModel,bidsValidation,bidStatusValidation};
