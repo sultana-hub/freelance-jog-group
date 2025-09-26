@@ -45,7 +45,7 @@
         return matchesRole && matchesSearch;
       });
 
-      currentPage = 1; // reset to first page
+      currentPage = 1;
       renderTable();
     }
 

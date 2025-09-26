@@ -29,6 +29,15 @@
             </div>
 
             <div class="mb-3">
+              <label for="isActive" class="form-label">Is Active </label>
+              <select id="isActive" name="isActive" class="form-select custom-select" required>
+                <option value="true" <%= user.isActive === true ? "selected" : "" %>>Active</option>
+                <option value="false" <%= user.isActive === false ? "selected" : "" %>>Blocked</option>
+                
+              </select>
+            </div>
+
+            <div class="mb-3">
               <label for="profilePic" class="form-label">Profile Picture</label>
               <div class="mb-3">
                 <img src="/<%= user.profilePic ? user.profilePic : "/images/default-profile-picture.png" %>" class="img-fluid mb-3 rounded shadow" alt="profile picture" width="70">

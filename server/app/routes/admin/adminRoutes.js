@@ -8,6 +8,7 @@ const categoryController = require('../../controller/admin/categoryController');
 const userManageController = require('../../controller/admin/userManageController');
 const jobController = require('../../controller/admin/jobController');
 const userImageUpload = require('../../helper/userImageUploads');
+const bidsController = require('../../controller/admin/bidsController');
 
 
 
@@ -43,6 +44,10 @@ router.post("/user-delete/:id",isLogin, userManageController.deleteUser);
 // Job Management Routes
 router.get("/jobs",isLogin, jobController.getAllJobs);
 router.post("/job-delete/:id",isLogin, jobController.deleteJob);
+
+// Bids Management Routes
+router.get("/manage-bids",isLogin, bidsController.getAllBids);
+router.post("/update-bid-status/:bidId",isLogin, bidsController.updateBidStatus);
 
 
 

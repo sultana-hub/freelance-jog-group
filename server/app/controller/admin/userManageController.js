@@ -81,7 +81,7 @@ class UserManageController {
 
     async updateUserPut(req, res) {
         try {
-            const { name, email, role } = req.body;
+            const { name, email, role , isActive } = req.body;
 
             const user = await UserModel.findById(req.params.id);
             if (!user) return res.status(404).send("User not found");
@@ -93,7 +93,7 @@ class UserManageController {
                 profilePicPath = req.file.path;
             }
 
-            await UserModel.findByIdAndUpdate(req.params.id, { name, email, role, profilePic: profilePicPath });
+            await UserModel.findByIdAndUpdate(req.params.id, { name, email, role, profilePic: profilePicPath, isActive });
 
             if (oldProfilePicPath && profilePicPath !== oldProfilePicPath) {
                 const filePath = path.join(__dirname, "../", oldProfilePicPath);
