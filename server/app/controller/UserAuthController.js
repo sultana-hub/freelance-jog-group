@@ -248,6 +248,15 @@ class UserAuthController {
             if (!user.isVerified) {
                 return res.status(401).json({ status: false, message: "Your account is not verified" });
             }
+
+            //user blocked by admin
+            if (!user.isActive) {
+                return res.status(401).json({
+                    status: false,
+                    message: "Your account is deactivated by Admin"
+                })
+            }
+
             const ismatch = comparePassword(password, user.password)
             if (!ismatch) {
                 return res.status(httpStatusCode.BadRequest).json({
