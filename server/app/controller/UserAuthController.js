@@ -37,7 +37,7 @@ class UserAuthController {
             };
 
             // Validate user input
-            const { error } = userValidation.validate(userData);
+            const { error,value } = userValidation.validate(userData);
             if (error) {
                 return res.status(httpStatusCode.BadRequest).json({
                     status: false,
@@ -50,7 +50,7 @@ class UserAuthController {
             const userWithEmail = await UserModel.aggregate([
                 {
                     $match: {
-                        email: userData.email
+                        email: value.email
                     }
                 },
                 {
@@ -66,17 +66,17 @@ class UserAuthController {
             }
 
             // Hash the password (assuming async function)
-            const hashed = await hashedPassword(password);
+            const hashed = await hashedPassword(value.password);
 
             // Create and save user
             const user = new UserModel({
-                name,
-                email,
+                name:value.name,
+                email:value.email,
                 password: hashed,
-                role,
-                skills,
-                bio,
-                profilePic: userData.profilePic
+                role:value.role,
+                skills:value.skills,
+                bio:value.bio,
+                profilePic: value.profilePic
             });
 
             const data = await user.save();
