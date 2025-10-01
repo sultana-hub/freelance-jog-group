@@ -9,8 +9,9 @@ const fs=require('fs')
 const methodOverride = require('method-override');
 const session = require('express-session');
 const adminRoutes = require('./app/routes/admin/adminRoutes');
-
+const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const flash = require('connect-flash');
 
 dbCon()
 const app=express()
@@ -28,6 +29,8 @@ app.use(session({
   saveUninitialized: true,
   cookie: { secure: false } // use true if using HTTPS
 }));
+// app.use(bodyParser.json());
+app.use(flash())
 
 
 app.use(express.json())
@@ -52,6 +55,7 @@ app.use ('/api/auth',userAuthRoues)
 const jobRoute=require('./app/routes/jobRoutes')
 //bid route
 const bidRoutes = require('./app/routes/bidRoutes')
+// const flash = require('connect-flash/lib/flash')
 app.use('/api/bids',bidRoutes)
 // const cookieParser = require('cookie-parser')
 app.use('/api',jobRoute)
