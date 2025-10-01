@@ -5,7 +5,7 @@ class BidsController {
             const loginUser = req.user;
             const bids = await BidModel.find({}).populate("freelancerId", "name").populate("jobId", "title");
             console.log(bids);
-            res.render("bids/manage-bids", { loginUser, bids });
+            res.render("bids/manage-bids", { loginUser, bids , });
         } catch (error) {
             console.error(error);
             res.status(500).json({ status: false, message: "Server error" });

@@ -1,6 +1,6 @@
 
 const bcrypt = require('bcryptjs');
-const { UserModel } = require('../../model/User');
+const { UserModel, userValidation } = require('../../model/User');
 const path = require('path');
 const fs = require('fs');
 
@@ -73,7 +73,7 @@ class UserManageController {
             const user = await UserModel.findById(req.params.id);
             if (!user) return res.status(404).send("User not found");
             // console.log("user",user);
-            res.render("user/edit_user", { user , loginUser });
+            res.render("user/edit_user", { user , loginUser , messages: req.flash() });
         } catch (err) {
             res.status(500).send("Error loading update form: " + err.message);
         }
@@ -81,10 +81,29 @@ class UserManageController {
 
     async updateUserPut(req, res) {
         try {
+
+            // Validate user input
             const { name, email, role , isActive } = req.body;
 
+            const userData = {
+                name,
+                email,
+                role,
+                isActive
+            }
+            const { error,value } = userValidation.validate(userData);
+            if (error) {
+                req.flash("error", error.message);
+                return res.redirect(`/admin/user-update/${req.params.id}`);
+            }
+
+            
+
             const user = await UserModel.findById(req.params.id);
-            if (!user) return res.status(404).send("User not found");
+            if (!user) {
+                req.flash("error", "User not found");
+                return res.redirect(`/admin/user-update/${req.params.id}`);
+            }
             
             const oldProfilePicPath = user.profilePic;
 
@@ -103,7 +122,7 @@ class UserManageController {
                     }
                 });
             }
-
+            req.flash("success", "User updated successfully");
             res.redirect("/admin/users");
         } catch (err) {
             res.status(500).send("Error updating user: " + err.message);

@@ -14,8 +14,7 @@ class CategoryController {
 
     async createCategory(req, res) {
         const loginUser = req.user;
-
-        res.render("category/add_category", { loginUser });
+        res.render("category/add_category", { loginUser , messages: req.flash() });
     }
     async createCategoryPost(req, res) {
         try {
@@ -23,27 +22,20 @@ class CategoryController {
 
             const { error } = categoryValidation.validate({ name });
             if (error) {
-                return res.status(httpStatusCode.BadRequest).json({
-                    status: false,
-                    message: error.message
-                });
+                req.flash("error", error.message);
+                
             }
 
             const existingCategory = await CategoryModel.findOne({ name: name.trim() });
             if (existingCategory) {
-                return res.status(httpStatusCode.BadRequest).json({
-                    status: false,
-                    message: 'Category already exists'
-                });
+                req.flash("error", "Category already exists");
+                return res.redirect(`/admin/category-create`);
+               
             }
 
             const categoryData = new CategoryModel({ name: name.trim() });
             const data = await categoryData.save();
-
             return res.redirect(`/admin/categories`);
-
-
-
         } catch (error) {
             return res.status(httpStatusCode.InternalServerError).json({
                 status: false,
@@ -57,7 +49,7 @@ class CategoryController {
         const category = await CategoryModel.findById(id);
         const loginUser = req.user;
 
-        res.render("category/edit_category", { category , loginUser});
+        res.render("category/edit_category", { category , loginUser , messages: req.flash() });
     }
 
     async updateCategoryPost(req, res) {
@@ -69,10 +61,9 @@ class CategoryController {
             const { error } = categoryValidation.validate({ name });
             if (error) {
                 console.log("Validation Error:", error.message);
-                return res.status(httpStatusCode.BadRequest).json({
-                    status: false,
-                    message: "Category name is required. " + error.message
-                });
+                req.flash("error", error.message);
+                return res.redirect(`/admin/categories`);
+
             }
 
             // Checking if category name already exists (excluding current)
@@ -83,10 +74,9 @@ class CategoryController {
 
             if (existingCategory) {
                 console.log("Name already exists");
-                return res.status(httpStatusCode.Conflict).json({
-                    status: false,
-                    message: "Category already exists."
-                });
+                req.flash("error", "Category already exists.");
+                return res.redirect(`/admin/categories`);
+
             }
 
             // Updating category
@@ -101,12 +91,10 @@ class CategoryController {
 
             if (!category) {
                 console.log("Category not found");
-                return res.status(httpStatusCode.NotFound).json({
-                    status: false,
-                    message: "Category not found."
-                });
+                req.flash("error", "Category not found");
+               
             }
-
+            req.flash("success", "Category updated successfully");
             console.log("Category updated successfully");
             res.redirect(`/admin/categories`);
 
@@ -127,19 +115,13 @@ class CategoryController {
 
             // Validate MongoDB ObjectId
             if (!mongoose.Types.ObjectId.isValid(id)) {
-                return res.status(httpStatusCode.BadRequest).json({
-                    status: false,
-                    message: "Invalid category ID"
-                });
+                req.flash("error", "Invalid category ID");
             }
 
             const delCat = await CategoryModel.findByIdAndDelete(id);
 
             if (!delCat) {
-                return res.status(httpStatusCode.NotFound).json({
-                    status: false,
-                    message: "Category not found"
-                });
+                req.flash("error", "Category not found");
             }
 
             res.redirect(`/admin/categories`);

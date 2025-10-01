@@ -4,6 +4,17 @@
   <div class="row justify-content-center">
     <div class="col-md-8">
       <div class="card form_card shadow" >
+        <% if (messages.success && messages.success.length> 0) { %>
+          <div class="alert alert-success" role="alert">
+            <%= messages.success[0] %>
+          </div>
+          <% } %>
+
+            <% if (messages.error && messages.error.length> 0) { %>
+              <div class="alert alert-danger" role="alert">
+                <%= messages.error[0] %>
+              </div>
+              <% } %>
         <div class="card-header form_header" >
           <h3 class="mb-4">Update User</h3>
         </div>
@@ -11,7 +22,7 @@
           <form action="/admin/user-update/<%= user._id %>" method="POST" class="mt-4" enctype="multipart/form-data">
             <div class="mb-3">
               <label for="name" class="form-label">Name</label>
-              <input type="text" id="name" name="name" class="form-control" placeholder="Enter your Name" value="<%= user.name %>" required>
+              <input type="text" id="name" name="name" class="form-control" placeholder="Enter your Name" value="<%= user.name %>" >
             </div>
 
             <div class="mb-3">
