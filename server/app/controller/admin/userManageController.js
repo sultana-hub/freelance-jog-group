@@ -1,6 +1,6 @@
 
 const bcrypt = require('bcryptjs');
-const { UserModel, userValidation } = require('../../model/User');
+const { UserModel, userValidation, updateUserValidation } = require('../../model/User');
 const path = require('path');
 const fs = require('fs');
 
@@ -91,7 +91,7 @@ class UserManageController {
                 role,
                 isActive
             }
-            const { error,value } = userValidation.validate(userData);
+            const { error,value } = updateUserValidation.validate(userData);
             if (error) {
                 req.flash("error", error.message);
                 return res.redirect(`/admin/user-update/${req.params.id}`);

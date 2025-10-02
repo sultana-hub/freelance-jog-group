@@ -13,6 +13,16 @@ const userValidation = Joi.object({
     skills: Joi.array().items(Joi.string().trim()).optional(),
     bio: Joi.string().optional().min(3).trim(),
 })
+const updateUserValidation = Joi.object({
+    name: Joi.string().required().min(3).trim(),
+    email: Joi.string().email().required().trim(),
+    // password: Joi.string().required().min(4).trim(),
+    // profilePic: Joi.string().required().trim(),
+    role: Joi.string().valid('admin','freelancer', 'client').required().trim(),
+    // skills: Joi.array().items(Joi.string().trim()).optional(),
+    // bio: Joi.string().optional().min(3).trim(),
+    isActive: Joi.boolean().optional()
+})
 
 const loginValidation = Joi.object({
     email: Joi.string().email().required().trim(),
@@ -76,4 +86,4 @@ const UserSchema = new schema({
 });
 
 const UserModel = mongoose.model('User', UserSchema)
-module.exports = { UserModel, userValidation, loginValidation,profileUpdateValidation }
+module.exports = { UserModel, userValidation, loginValidation,profileUpdateValidation, updateUserValidation }
