@@ -62,7 +62,7 @@ class CategoryController {
             if (error) {
                 console.log("Validation Error:", error.message);
                 req.flash("error", error.message);
-                return res.redirect(`/admin/categories`);
+                return res.redirect(`/admin/category-update/${id}`);
 
             }
 
@@ -75,7 +75,8 @@ class CategoryController {
             if (existingCategory) {
                 console.log("Name already exists");
                 req.flash("error", "Category already exists.");
-                return res.redirect(`/admin/categories`);
+                return res.redirect(`/admin/category-update/${id}`);
+
 
             }
 
